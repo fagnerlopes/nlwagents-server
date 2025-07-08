@@ -6,6 +6,13 @@
   "javascript": {
     "formatter": {
       "semicolons": "asNeeded"
+    },
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noConsole": "off"
+      }
     }
   }
 }

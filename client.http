@@ -2,15 +2,23 @@
 @baseUrl = http://localhost:3333
 
 # Health check
+# @name healthCheck
 GET {{baseUrl}}/health
 
 ###
 # Get rooms
+# @name getRooms
+# @description This endpoint retrieves a list of all rooms.
+# @response 200 - Returns a list of rooms.
 GET {{baseUrl}}/rooms
 
 ###
 
 # Create room
+# @name createRoom
+# @description This endpoint creates a new room with the provided name and description.
+# @requestBody
+# @response 201 - Returns the created room.
 POST {{baseUrl}}/rooms
 Accept: application/json
 Content-Type: application/json
@@ -19,3 +27,17 @@ Content-Type: application/json
   "name": "Sala de Teste",
   "description": "Esta é uma sala de teste para verificar a criação de salas."
 }
+
+###
+
+@roomId = {{getRooms.response.body.$.[0].id}}
+###
+
+# Get room questions
+# @name getRoomQuestions
+# @description This endpoint retrieves all questions for a specific room.
+# @pathParam roomId - The unique identifier of the room.
+# @response 200 - Returns a list of questions for the specified room.
+GET {{baseUrl}}/rooms/{{roomId}}/questions
+
+

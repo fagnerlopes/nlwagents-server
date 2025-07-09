@@ -41,3 +41,17 @@ Content-Type: application/json
 GET {{baseUrl}}/rooms/{{roomId}}/questions
 
 
+###
+# Create question
+# @name createQuestion
+# @description This endpoint creates a new question in a specific room.
+# @pathParam roomId - The unique identifier of the room.
+# @requestBody
+# @response 201 - Returns the created question.
+POST {{baseUrl}}/rooms/{{roomId}}/questions
+Accept: application/json
+Content-Type: application/json
+
+{
+  "question": "Pergunta de teste?"
+}

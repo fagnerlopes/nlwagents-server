@@ -4,7 +4,7 @@ import { rooms } from './rooms.ts'
 export const questions = pgTable('questions', {
   id: uuid().primaryKey().defaultRandom(),
   roomId: uuid()
-    .references(() => rooms.id)
+    .references(() => rooms.id, { onDelete: 'cascade' })
     .notNull(),
   question: text().notNull(),
   answer: text(),

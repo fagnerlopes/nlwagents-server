@@ -73,16 +73,20 @@ export async function generateAnswer(
 
   const prompt = `
     Com base no texto fornecido abaixo como contexto, responda a pergunta de forma clara e objetiva em português do Brasil.
+
     CONTEXTO:
     ${context}
-    PERGUNTA: ${question}
+
+    PERGUNTA: 
+    ${question}
+    
     RESPOSTA:
-    - Use apenas informações contidas no contexto enviad;
-    - Se a resposta não for encontrada no contexto, responda 'Não tenho informações suficientes para responder';
+    - Use apenas informações contidas no contexto enviado;
     - Seja objetivo;
     - Mantenha um tom educativo e profissional;
     - Cite trechos relevantes do contexto se apropriado;
-    - Se for citar o contexto, utilize o termo "Conteúdo da live" seguido do trecho citado.    
+    - Se for citar o contexto, utilize o termo "Conteúdo da live" seguido do trecho citado corrigindo a gramática.    
+    - Se a resposta não for encontrada no contexto, responda 'Não tenho informações suficientes para responder';
   `.trim()
 
   const response = await gemini.models.generateContent({

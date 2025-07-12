@@ -53,5 +53,20 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "question": "Lorem ipsum dolor sit amet?"
+  "question": "o que é Reactjs?"
+}
+
+###
+# Create question - EXEMPLO FORA DO CONTEXTO
+# @name createQuestion
+# @description This endpoint creates a new question in a specific room.
+# @pathParam roomId - The unique identifier of the room.
+# @requestBody
+# @response 201 - Returns the created question.
+POST {{baseUrl}}/rooms/17d3c751-d16a-4202-a13b-f0c6fff0e6f8/questions
+Accept: application/json
+Content-Type: application/json
+
+{
+  "question": "Quanto está custando o café no Brasil?"
 }

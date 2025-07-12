@@ -50,6 +50,10 @@ export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
         const transcriptions = chunks.map((chunk) => chunk.transcription)
 
         answer = await generateAnswer(question, transcriptions)
+      } else {
+        console.warn('[WARNING] No similar content found for the question')
+        answer =
+          'Desculpe, não consegui encontrar uma resposta para a sua pergunta no conteúdo da live.'
       }
 
       const result = await db

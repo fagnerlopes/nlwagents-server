@@ -5,6 +5,18 @@ const envSchema = z.object({
   APP_URL: z.string().url().default('http://localhost:3333'),
   PORT: z.coerce.number().default(3333),
   DATABASE_URL: z.string().url().startsWith('postgresql://'),
+  GEMINI_API_KEY: z.string().min(30, 'GEMINI_API_KEY is required'),
+  GEMINI_MODEL: z
+    .string()
+    .min(10, 'GEMINI_MODEL is required')
+    .default('gemini-2.5-pro'),
+  GEMINI_DESCRIPTION_ROLE: z
+    .string()
+    .optional()
+    .default(
+      'Você é um assistente de IA especializado em responder perguntas sobre o conteúdo de áudio apenas sobre tecnologia.'
+    ),
+  GEMINI_MODEL_EMBEDDING: z.string().default('text-embedding-004'),
 })
 
 export const env = envSchema.parse(process.env)

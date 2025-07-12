@@ -3,7 +3,6 @@ import { env } from '../env.ts'
 
 const gemini = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY })
 const model = env.GEMINI_MODEL
-const geminiDescriptionRole = env.GEMINI_DESCRIPTION_ROLE
 const geminiModelEmbedding = env.GEMINI_MODEL_EMBEDDING
 
 export async function transcribeAudio(audioAsBase64: string, mimeType: string) {
@@ -12,9 +11,7 @@ export async function transcribeAudio(audioAsBase64: string, mimeType: string) {
       model,
       contents: [
         {
-          text: `${geminiDescriptionRole}. Transcreva o áudio para o Protuguês do Brasil. 
-          Seja preciso e natural na transcrição. Mantenha a pontuação adequada e divida o 
-          texto em parágrafos quando for apropriado. Responda apenas com o texto transcrito.`,
+          text: 'Transcreva o áudio para o Protuguês do Brasil. Seja preciso e natural na transcrição. Mantenha a pontuação adequada e divida o texto em parágrafos quando for apropriado.',
         },
         {
           inlineData: {
@@ -66,4 +63,45 @@ export async function generateEmbeddings(text: string) {
     console.error('[ERROR] Error generating embeddings:', error)
     throw new Error('Failed to generate embeddings')
   }
+}
+
+export async function generateAnswer(
+  question: string,
+  transcriptions: string[]
+) {
+  const context = transcriptions.join('\n\n')
+
+  const prompt = `
+    Com base no texto fornecido abaixo como contexto, responda a pergunta de forma clara e objetiva em português do Brasil.
+    CONTEXTO:
+    ${context}
+    PERGUNTA: ${question}
+    RESPOSTA:
+    - Use apenas informações contidas no contexto enviad;
+    - Se a resposta não for encontrada no contexto, responda 'Não tenho informações suficientes para responder';
+    - Seja objetivo;
+    - Mantenha um tom educativo e profissional;
+    - Cite trechos relevantes do contexto se apropriado;
+    - Se for citar o contexto, utilize o termo "Conteúdo da live" seguido do trecho citado.    
+  `.trim()
+
+  const response = await gemini.models.generateContent({
+    model,
+    contents: [
+      {
+        text: prompt,
+      },
+    ],
+  })
+
+  if (!response.text) {
+    console.error(
+      '[ERROR] Answer generation failed: No text returned from Gemini API'
+    )
+    throw new Error(
+      'Answer generation failed: No text returned from Gemini API'
+    )
+  }
+
+  return response.text
 }

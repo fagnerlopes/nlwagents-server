@@ -12,9 +12,14 @@ import { getRoomQuestionsRoute } from './http/routes/get-room-questions.ts'
 import { getRoomsRoute } from './http/routes/get-rooms.ts'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
+const host = env.APP_ENV === 'development' ? '0.0.0.0' : 'localhost'
+const corsOrigins =
+  env.APP_ENV === 'development'
+    ? ['*']
+    : [env.APP_URL, 'http://192.168.0.15:5173']
 
 app.register(fastifyCors, {
-  origin: 'http://localhost:5173',
+  origin: corsOrigins,
 })
 
 app.setSerializerCompiler(serializerCompiler)
@@ -29,4 +34,4 @@ app.register(createRoomRoute)
 app.register(getRoomQuestionsRoute)
 app.register(createQuestionRoute)
 
-app.listen({ port: env.PORT })
+app.listen({ port: env.PORT, host })

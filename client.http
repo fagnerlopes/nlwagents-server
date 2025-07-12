@@ -53,5 +53,5 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "question": "Pergunta de teste?"
+  "question": "Lorem ipsum dolor sit amet?"
 }

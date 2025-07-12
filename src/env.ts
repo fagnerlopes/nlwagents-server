@@ -10,12 +10,6 @@ const envSchema = z.object({
     .string()
     .min(10, 'GEMINI_MODEL is required')
     .default('gemini-2.5-pro'),
-  GEMINI_DESCRIPTION_ROLE: z
-    .string()
-    .optional()
-    .default(
-      'Você é um assistente de IA especializado em responder perguntas sobre o conteúdo de áudio apenas sobre tecnologia.'
-    ),
   GEMINI_MODEL_EMBEDDING: z.string().default('text-embedding-004'),
 })
 

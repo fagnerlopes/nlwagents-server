@@ -6,6 +6,25 @@
 GET {{baseUrl}}/health
 
 ###
+
+# Create user
+# @name createUser
+# @description This endpoint creates a new user with the provided name, email and password.
+# @requestBody
+# @response 201 - Returns the created room.
+
+POST {{baseUrl}}/create-user
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Fagner Lopes",
+  "email": "fagnernlopes@gmail.com",
+  "password": "201125",
+  "acceptsAds": true
+}
+
+###
 # Get rooms
 # @name getRooms
 # @description This endpoint retrieves a list of all rooms.

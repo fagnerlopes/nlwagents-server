@@ -3,6 +3,7 @@ import { z } from 'zod'
 const envSchema = z.object({
   APP_ENV: z.enum(['development', 'production']).default('development'),
   APP_URL: z.string().url().default('http://localhost:3333'),
+  JWT_SECRET: z.string().min(128, 'JWT_SECRET is require'),
   PORT: z.coerce.number().default(3333),
   DATABASE_URL: z.string().url().startsWith('postgresql://'),
   GEMINI_API_KEY: z.string().min(30, 'GEMINI_API_KEY is required'),

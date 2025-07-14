@@ -14,6 +14,7 @@ import { createRoomRoute } from './http/routes/create-room.ts'
 import { createUserRoute } from './http/routes/create-user.ts'
 import { getRoomQuestionsRoute } from './http/routes/get-room-questions.ts'
 import { getRoomsRoute } from './http/routes/get-rooms.ts'
+import { healthCheckRoute } from './http/routes/health-check.ts'
 import { loginRoute } from './http/routes/login.ts'
 import { refreshTokenRoute } from './http/routes/refresh-token.ts'
 import { uploadAudioRoute } from './http/routes/upload-audio.ts'
@@ -39,10 +40,7 @@ app.setValidatorCompiler(validatorCompiler)
 app.register(refreshTokenRoute)
 app.register(fastifyCookie)
 
-app.get('/health', () => {
-  return 'OK'
-})
-
+app.register(healthCheckRoute)
 app.register(loginRoute)
 app.register(createUserRoute)
 app.register(getRoomsRoute)

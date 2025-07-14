@@ -3,11 +3,13 @@ import z from 'zod/v4'
 import { db } from '../../db/connection.ts'
 import { schema } from '../../db/schema/index.ts'
 import { generateEmbeddings, transcribeAudio } from '../../services/gemini.ts'
+import { authenticate } from '../middlewares/authenticate.ts'
 
 export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
   app.post(
     '/rooms/:roomId/audio',
     {
+      preHandler: [authenticate],
       schema: {
         params: z.object({
           roomId: z.string(),

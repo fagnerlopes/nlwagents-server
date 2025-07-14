@@ -43,6 +43,10 @@ Content-Type: application/json
 
 ###
 
+@jwtToken = {{login.response.body.$.bearer_token}}
+
+###
+
 # Get rooms
 # @name getRooms
 # @description This endpoint retrieves a list of all rooms.
@@ -59,6 +63,7 @@ GET {{baseUrl}}/rooms
 POST {{baseUrl}}/rooms
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
 
 {
   "name": "Sala de Teste",
@@ -68,6 +73,7 @@ Content-Type: application/json
 ###
 
 @roomId = {{getRooms.response.body.$.[0].id}}
+
 ###
 
 # Get room questions

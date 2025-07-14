@@ -10,6 +10,7 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { env } from './env.ts'
+import { decodeUser } from './http/middlewares/decode-user.ts'
 import { createQuestionRoute } from './http/routes/create-question.ts'
 import { createRoomRoute } from './http/routes/create-room.ts'
 import { createUserRoute } from './http/routes/create-user.ts'
@@ -62,13 +63,17 @@ app.setValidatorCompiler(validatorCompiler)
 app.register(refreshTokenRoute)
 app.register(fastifyCookie)
 
+// Rotas públicas
 app.register(healthCheckRoute)
 app.register(loginRoute)
-app.register(createUserRoute)
-app.register(getRoomsRoute)
-app.register(createRoomRoute)
 app.register(getRoomQuestionsRoute)
 app.register(createQuestionRoute)
+app.register(createUserRoute)
+
+// Rotas autenticadas
+app.addHook('preHandler', decodeUser)
+app.register(getRoomsRoute)
+app.register(createRoomRoute)
 app.register(uploadAudioRoute)
 
 app.listen({ port: env.PORT, host })

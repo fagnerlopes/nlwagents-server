@@ -3,6 +3,7 @@ import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
 import { z } from 'zod/v4'
 import { db } from '../../db/connection.ts'
 import { schema } from '../../db/schema/index.ts'
+import { env } from '../../env.ts'
 import { generateJwtPair } from '../../lib/jwtGenerate.ts'
 import { verifyPasswordFromHash } from '../../lib/passwordCrypt.ts'
 
@@ -38,13 +39,11 @@ export const loginRoute: FastifyPluginCallbackZod = (app) => {
         throw new Error('Email ou senha incorreta')
       }
 
-      // Gera accessToken, refreshToken e jti
       const { accessToken, refreshToken, jti } = await generateJwtPair(app, {
         userId: user.id,
         payload: { email: user.email },
       })
 
-      // Salva o refreshToken e jti no banco
       await db.insert(schema.authTokens).values({
         userId: user.id,
         jti,
@@ -57,7 +56,7 @@ export const loginRoute: FastifyPluginCallbackZod = (app) => {
         httpOnly: true,
         path: '/',
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        secure: env.APP_ENV === 'production',
         maxAge: 7 * 24 * 60 * 60, // 7 dias
       })
 

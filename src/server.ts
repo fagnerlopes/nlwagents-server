@@ -13,6 +13,7 @@ import { createRoomRoute } from './http/routes/create-room.ts'
 import { createUserRoute } from './http/routes/create-user.ts'
 import { getRoomQuestionsRoute } from './http/routes/get-room-questions.ts'
 import { getRoomsRoute } from './http/routes/get-rooms.ts'
+import { loginRoute } from './http/routes/login.ts'
 import { uploadAudioRoute } from './http/routes/upload-audio.ts'
 
 const app = fastify({
@@ -41,6 +42,7 @@ app.get('/health', () => {
   return 'OK'
 })
 
+app.register(loginRoute)
 app.register(createUserRoute)
 app.register(getRoomsRoute)
 app.register(createRoomRoute)

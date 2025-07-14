@@ -5,7 +5,7 @@ import { db } from '../../db/connection.ts'
 import { schema } from '../../db/schema/index.ts'
 import { verifyPasswordFromHash } from '../../lib/passwordCrypt.ts'
 
-export const createUserRoute: FastifyPluginCallbackZod = (app) => {
+export const loginRoute: FastifyPluginCallbackZod = (app) => {
   app.post(
     '/login',
     {

@@ -19,12 +19,30 @@ Content-Type: application/json
 
 {
   "name": "Fagner Lopes",
-  "email": "fagnernlopes@gmail.com",
+  "email": "dotticarolzinha@gmail.com",
   "password": "201125",
   "acceptsAds": true
 }
 
 ###
+
+# Login
+# @name login
+# @description This endpoint validate credentials from email and password.
+# @requestBody
+# @response 201 - Returns the JWT access token.
+
+POST {{baseUrl}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "dotticarolzinha@gmail.com",
+  "password": "201125"
+}
+
+###
+
 # Get rooms
 # @name getRooms
 # @description This endpoint retrieves a list of all rooms.

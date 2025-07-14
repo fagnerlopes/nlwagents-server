@@ -22,13 +22,11 @@ const app = fastify({
   logger: { level: 'debug' },
 }).withTypeProvider<ZodTypeProvider>()
 const host = env.APP_ENV === 'development' ? '0.0.0.0' : 'localhost'
-const corsOrigins =
-  env.APP_ENV === 'development'
-    ? ['*']
-    : [env.APP_URL, 'http://192.168.0.15:5173']
+const corsOrigins = ['http://localhost:5173']
 
 app.register(fastifyCors, {
   origin: corsOrigins,
+  credentials: true,
 })
 
 app.register(fastifyJwt, {

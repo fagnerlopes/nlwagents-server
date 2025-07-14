@@ -10,7 +10,6 @@ import {
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import { env } from "./env.ts";
-import { decodeUser } from "./http/middlewares/decode-user.ts";
 import { createQuestionRoute } from "./http/routes/create-question.ts";
 import { createRoomRoute } from "./http/routes/create-room.ts";
 import { createUserRoute } from "./http/routes/create-user.ts";
@@ -21,6 +20,8 @@ import { loginRoute } from "./http/routes/login.ts";
 import { refreshTokenRoute } from "./http/routes/refresh-token.ts";
 import { uploadAudioRoute } from "./http/routes/upload-audio.ts";
 import { getProfileRoute } from "./http/routes/get-profile.ts";
+import { logoutRoute } from "./http/routes/logout.ts";
+import { ensureAuthenticated } from "./http/middlewares/decode-user.ts";
 
 const app = fastify({
   logger: { level: "debug" },
@@ -65,21 +66,25 @@ app.register(fastifyJwt, {
 app.register(fastifyMultipart);
 app.setSerializerCompiler(serializerCompiler);
 app.setValidatorCompiler(validatorCompiler);
-app.register(refreshTokenRoute);
 app.register(fastifyCookie);
 
 // Rotas públicas
 app.register(healthCheckRoute);
 app.register(loginRoute);
+app.register(refreshTokenRoute);
 app.register(getRoomQuestionsRoute);
 app.register(createQuestionRoute);
 app.register(createUserRoute);
+app.register(logoutRoute);
 
 // Rotas autenticadas
-app.addHook("preHandler", decodeUser);
-app.register(getRoomsRoute);
-app.register(createRoomRoute);
-app.register(uploadAudioRoute);
-app.register(getProfileRoute);
+app.register(async (authenticatedRoutes) => {
+  authenticatedRoutes.addHook("onRequest", ensureAuthenticated);
+
+  authenticatedRoutes.register(getRoomsRoute);
+  authenticatedRoutes.register(createRoomRoute);
+  authenticatedRoutes.register(uploadAudioRoute);
+  authenticatedRoutes.register(getProfileRoute);
+});
 
 app.listen({ port: env.PORT, host });

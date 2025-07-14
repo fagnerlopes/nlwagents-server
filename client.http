@@ -59,12 +59,19 @@ Authorization: Bearer {{jwtToken}}
 
 ###
 
+# Logout
+# @name logout
+# @description This endpoint logs out the user by invalidating the refresh token.
+
+POST {{baseUrl}}/logout
+Accept: application/json
+
+###
+
 # Refresh Token
 # @name refreshToken
 # @description Este endpoint renova o access token usando o refresh token armazenado em cookie HTTP Only.
 # @response 200 - Retorna um novo access token.
-
-
 POST {{baseUrl}}/refresh-token
 Accept: application/json
 

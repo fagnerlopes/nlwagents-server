@@ -1,14 +1,25 @@
-import type { FastifyRequest } from "fastify";
+import type { FastifyRequest, FastifyReply } from "fastify";
+import { db } from "../../db/connection.ts";
+import { eq } from "drizzle-orm";
+import { schema } from "../../db/schema/index.ts";
 import type { JwtPayload } from "../routes/types/jwt-payload.ts";
 
-export async function decodeUser(request: FastifyRequest) {
+export async function ensureAuthenticated(
+  request: FastifyRequest,
+  reply: FastifyReply
+) {
   try {
-    const auth = request.headers.authorization;
-    if (auth?.startsWith("Bearer ")) {
-      const payload = (await request.jwtVerify()) as JwtPayload;
-      request.user = payload;
+    const payload = await request.jwtVerify<JwtPayload>();
+
+    const [tokenRecord] = await db
+      .select({ revoked: schema.authTokens.revoked })
+      .from(schema.authTokens)
+      .where(eq(schema.authTokens.jti, payload.jti));
+
+    if (!tokenRecord || tokenRecord.revoked) {
+      return reply.status(401).send({ message: "Token has been revoked." });
     }
-  } catch {
-    // Não lança erro, apenas não popula user
+  } catch (err) {
+    return reply.status(401).send({ message: "Authentication required." });
   }
 }

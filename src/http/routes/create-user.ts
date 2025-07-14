@@ -4,13 +4,11 @@ import { z } from 'zod/v4'
 import { db } from '../../db/connection.ts'
 import { schema } from '../../db/schema/index.ts'
 import { getHashFromPassword } from '../../lib/passwordCrypt.ts'
-import { authenticate } from '../middlewares/authenticate.ts'
 
 export const createUserRoute: FastifyPluginCallbackZod = (app) => {
   app.post(
     '/create-user',
     {
-      preHandler: [authenticate],
       schema: {
         body: z.object({
           name: z.string().min(3, 'Name is required'),

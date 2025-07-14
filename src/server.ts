@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie'
 import { fastifyCors } from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import { fastifyMultipart } from '@fastify/multipart'
@@ -14,6 +15,7 @@ import { createUserRoute } from './http/routes/create-user.ts'
 import { getRoomQuestionsRoute } from './http/routes/get-room-questions.ts'
 import { getRoomsRoute } from './http/routes/get-rooms.ts'
 import { loginRoute } from './http/routes/login.ts'
+import { refreshTokenRoute } from './http/routes/refresh-token.ts'
 import { uploadAudioRoute } from './http/routes/upload-audio.ts'
 
 const app = fastify({
@@ -34,9 +36,10 @@ app.register(fastifyJwt, {
 })
 
 app.register(fastifyMultipart)
-
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
+app.register(refreshTokenRoute)
+app.register(fastifyCookie)
 
 app.get('/health', () => {
   return 'OK'

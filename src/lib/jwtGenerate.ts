@@ -15,11 +15,11 @@ export async function generateJwtPair(
   const jti = randomUUID()
   const accessToken = await app.jwt.sign(
     { userId: options.userId, jti, ...options.payload },
-    { expiresIn: options.accessTokenExpiresIn ?? '15m' }
+    { expiresIn: options.accessTokenExpiresIn ?? '1d' } // access_token dura 1 dia
   )
   const refreshToken = await app.jwt.sign(
     { userId: options.userId, jti },
-    { expiresIn: options.refreshTokenExpiresIn ?? '7d' }
+    { expiresIn: options.refreshTokenExpiresIn ?? '7d' } // refresh_token dura 7 dias
   )
   return { accessToken, refreshToken, jti }
 }

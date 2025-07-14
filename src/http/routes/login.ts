@@ -52,9 +52,17 @@ export const loginRoute: FastifyPluginCallbackZod = (app) => {
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 dias
       })
 
+      // Seta o refresh token como cookie HTTP Only
+      reply.setCookie('refresh_token', refreshToken, {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 7 * 24 * 60 * 60, // 7 dias
+      })
+
       return reply.status(200).send({
         access_token: accessToken,
-        refresh_token: refreshToken,
       })
     }
   )

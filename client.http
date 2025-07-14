@@ -7,7 +7,6 @@ GET {{baseUrl}}/health
 
 ###
 
-
 # Create user
 # @name createUser
 # @description This endpoint creates a new user with the provided name, email and password.
@@ -45,7 +44,18 @@ Content-Type: application/json
 
 ###
 
-@jwtToken = {{login.response.body.$.bearer_token}}
+@jwtToken = {{login.response.body.$.access_token}}
+
+###
+
+# Refresh Token
+# @name refreshToken
+# @description Este endpoint renova o access token usando o refresh token armazenado em cookie HTTP Only.
+# @response 200 - Retorna um novo access token.
+
+
+POST {{baseUrl}}/refresh-token
+Accept: application/json
 
 ###
 

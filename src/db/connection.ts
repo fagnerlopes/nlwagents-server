@@ -4,7 +4,7 @@ import { env } from '../env.ts'
 import { schema } from './schema/index.ts'
 
 export const sql = postgres(env.DATABASE_URL, {
-  max: 1,
+  max: 10,
   idle_timeout: 5,
   onnotice: (notice) => {
     console.warn('Postgres notice:', notice)

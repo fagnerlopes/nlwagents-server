@@ -48,6 +48,17 @@ Content-Type: application/json
 
 ###
 
+# Get Profile
+# @name getProfile
+# @description This endpoint returns the authenticated user's profile.
+# @response 200 - Returns the user object.
+
+GET {{baseUrl}}/me
+Accept: application/json
+Authorization: Bearer {{jwtToken}}
+
+###
+
 # Refresh Token
 # @name refreshToken
 # @description Este endpoint renova o access token usando o refresh token armazenado em cookie HTTP Only.

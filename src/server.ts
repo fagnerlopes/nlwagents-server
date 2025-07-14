@@ -2,6 +2,7 @@ import fastifyCookie from '@fastify/cookie'
 import { fastifyCors } from '@fastify/cors'
 import fastifyJwt from '@fastify/jwt'
 import { fastifyMultipart } from '@fastify/multipart'
+import fastifyRateLimit from '@fastify/rate-limit'
 import { fastify } from 'fastify'
 import {
   serializerCompiler,
@@ -28,6 +29,27 @@ const corsOrigins = ['http://localhost:5173']
 app.register(fastifyCors, {
   origin: corsOrigins,
   credentials: true,
+})
+
+app.register(fastifyRateLimit, {
+  max: 100,
+  timeWindow: '1 minute',
+  keyGenerator: (req) => {
+    if (req.user && typeof req.user === 'object' && 'id' in req.user) {
+      return (req.user as { id: string }).id
+    }
+    return req.ip
+  },
+  ban: 2,
+  errorResponseBuilder: (_req, context) => {
+    return {
+      statusCode: 429,
+      error: 'Too Many Requests',
+      message: `Você excedeu o limite de ${context.max} requisições por minuto. Tente novamente em ${Math.ceil(context.ttl / 1000)} segundos.`,
+    }
+  },
+  allowList: ['127.0.0.1'],
+  skipOnError: true,
 })
 
 app.register(fastifyJwt, {

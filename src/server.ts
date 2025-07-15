@@ -22,6 +22,7 @@ import { uploadAudioRoute } from "./http/routes/upload-audio.ts";
 import { getProfileRoute } from "./http/routes/get-profile.ts";
 import { logoutRoute } from "./http/routes/logout.ts";
 import { ensureAuthenticated } from "./http/middlewares/decode-user.ts";
+import { getRoomRoute } from "./http/routes/get-room.ts";
 
 const app = fastify({
   logger: { level: "debug" },
@@ -71,20 +72,22 @@ app.register(fastifyCookie);
 // Rotas públicas
 app.register(healthCheckRoute);
 app.register(loginRoute);
-app.register(refreshTokenRoute);
+
 app.register(getRoomQuestionsRoute);
 app.register(createQuestionRoute);
 app.register(createUserRoute);
-app.register(logoutRoute);
+app.register(getRoomRoute);
 
 // Rotas autenticadas
 app.register(async (authenticatedRoutes) => {
   authenticatedRoutes.addHook("onRequest", ensureAuthenticated);
 
+  authenticatedRoutes.register(refreshTokenRoute);
+  authenticatedRoutes.register(getProfileRoute);
   authenticatedRoutes.register(getRoomsRoute);
   authenticatedRoutes.register(createRoomRoute);
   authenticatedRoutes.register(uploadAudioRoute);
-  authenticatedRoutes.register(getProfileRoute);
+  authenticatedRoutes.register(logoutRoute);
 });
 
 app.listen({ port: env.PORT, host });

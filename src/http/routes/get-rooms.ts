@@ -1,16 +1,24 @@
-import { count, eq } from 'drizzle-orm'
-import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
-import { db } from '../../db/connection.ts'
-import { schema } from '../../db/schema/index.ts'
-import { authenticate } from '../middlewares/authenticate.ts'
+import { count, eq } from "drizzle-orm";
+import type { FastifyPluginCallbackZod } from "fastify-type-provider-zod";
+import type { FastifyRequest } from "fastify";
+import { db } from "../../db/connection.ts";
+import { schema } from "../../db/schema/index.ts";
+import { authenticate } from "../middlewares/authenticate.ts";
+import type { JwtPayload } from "./types/jwt-payload.ts";
+
+interface AuthenticatedRequest extends FastifyRequest {
+  user: JwtPayload;
+}
 
 export const getRoomsRoute: FastifyPluginCallbackZod = (app) => {
   app.get(
-    '/rooms',
+    "/rooms",
     {
       preHandler: [authenticate],
     },
-    async () => {
+    async (request) => {
+      const userId = (request as AuthenticatedRequest).user.sub;
+
       const results = await db
         .select({
           id: schema.rooms.id,
@@ -23,10 +31,11 @@ export const getRoomsRoute: FastifyPluginCallbackZod = (app) => {
           schema.questions,
           eq(schema.questions.roomId, schema.rooms.id)
         )
+        .where(eq(schema.rooms.userId, userId))
         .groupBy(schema.rooms.id, schema.rooms.name)
-        .orderBy(schema.rooms.createdAt)
+        .orderBy(schema.rooms.createdAt);
 
-      return results
+      return results;
     }
-  )
-}
+  );
+};

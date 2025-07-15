@@ -19,7 +19,7 @@ Content-Type: application/json
 
 {
   "name": "Fagner Lopes",
-  "email": "fagnernlopes@gmail.com",
+  "email": "carol@gmail.com",
   "password": "201125",
   "acceptsAds": true
 }
@@ -84,7 +84,6 @@ Accept: application/json
 GET {{baseUrl}}/rooms
 Authorization: Bearer {{jwtToken}}
 
-
 ###
 
 # Create room
@@ -114,9 +113,21 @@ Authorization: Bearer {{jwtToken}}
 # @pathParam roomId - The unique identifier of the room.
 # @response 200 - Returns a list of questions for the specified room.
 GET {{baseUrl}}/rooms/{{roomId}}/questions
-
+Accept: application/json
+Content-Type: application/json
 
 ###
+# Get room by roomId
+# @name getRoom
+# @description This endpoint retrieve a specific room.
+# @pathParam roomId - The unique identifier of the room.
+# @response 200 - Returns a room.
+GET {{baseUrl}}/rooms/{{roomId}}
+Accept: application/json
+Content-Type: application/json
+
+###
+
 # Create question
 # @name createQuestion
 # @description This endpoint creates a new question in a specific room.
